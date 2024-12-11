@@ -1,0 +1,41 @@
+{
+  "genesis": {
+    "l1": {
+      "hash": "0x8166d29e6a61542aa0da47a0ab1fa4e77e8863f194397ebb7e8944b602d862d7",
+      "number": 4533777
+    },
+    "l2": {
+      "hash": "0x3dcfbf70fac946fff9d17819152ebfcf1fb6ad358b8dfedebe89bba87050dba1",
+      "number": 0
+    },
+    "l2_time": 1733846063,
+    "system_config": {
+      "batcherAddr": "0x13500f45ec2e6518a4fd51a713bbbd81dd617d5a",
+      "overhead": "0x0000000000000000000000000000000000000000000000000000000000000834",
+      "scalar": "0x00000000000000000000000000000000000000000000000000000000000f4240",
+      "gasLimit": 200000000
+    }
+  },
+  "block_time": 2,
+  "max_sequencer_drift": 3600,
+  "seq_window_size": 129600,
+  "channel_timeout": 300,
+  "l1_chain_id": 8899,
+  "l2_chain_id": 901,
+  "regolith_time": 0,
+  "canyon_time": 0,
+  "delta_time": 0,
+  "ecotone_time": 0,
+  "fjord_time": 0,
+  "batch_inbox_address": "0xff00000000000000000000000000000008555888",
+  "deposit_contract_address": "0x84a8da9675c5ed8964cec7cf585dc59a48304274",
+  "l1_system_config_address": "0x452152900237d1c12f44cbae22cb603d6ec9ec0b",
+  "protocol_versions_address": "0x0000000000000000000000000000000000000000",
+  "alt_da": {
+    "da_challenge_contract_address": "0x7976c62d711710ae98205fdaec37c0ee1e1d37be",
+    "da_commitment_type": "KeccakCommitment",
+    "da_challenge_window": 16,
+    "da_resolve_window": 16
+  }
+}
+

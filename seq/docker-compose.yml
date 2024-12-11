@@ -1,0 +1,82 @@
+services:
+  da-server:
+    image:  ghcr.io/otternode-io/ott-op-stack-1100:arm64
+    command: >
+      /app/da-server
+      --s3.bucket=otter-da
+      --s3.endpoint=da1.otterrpc.com
+      --s3.access-key-id=xxx
+      --s3.access-key-secret=xxx
+      --addr=0.0.0.0
+      --port=3100
+      --log.level=debug
+      --generic-commitment="false"
+#    volumes:
+#      - "./da_data:/data"
+
+  op-geth: 
+    image:  ghcr.io/otternode-io/ott-op-stack-1100:arm64
+    user: root
+    ports:
+      - 9545:8545       # RPC
+      - 9546:8546       # RPC
+      - 30301:30301
+    entrypoint: /op-geth-entrypoint
+    volumes:
+        - ./data/op-geth:/datadir
+        - ../config:/config
+        - ./op-geth-entrypoint:/op-geth-entrypoint
+    env_file:
+      - ../config/env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
+  op-node: 
+    image:  ghcr.io/otternode-io/ott-op-stack-1100:arm64
+    user: root
+    depends_on:
+      - op-geth
+      - da-server
+    ports:
+      - 7545:8547     # RPC
+      - 9222:9222     # P2P TCP
+      - 9222:9222/udp # P2P UDP
+      - 7300:7300     # metrics
+      - 6060:6060     # pprof
+    entrypoint: /op-node-entrypoint
+    volumes:
+        - ../config:/config
+        - ./op-node-entrypoint:/op-node-entrypoint
+        - ./data:/data
+        - ./data/op_log:/op_log
+    env_file:
+      - ../config/env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
+  op-batcher:
+    image:  ghcr.io/otternode-io/ott-op-stack-1100:arm64
+    user: root
+    depends_on:
+      - op-geth
+      - op-node
+    ports:
+      - 8548:8548
+    entrypoint: /op-batcher-entrypoint
+    volumes:
+        - ../config:/config
+        - ./op-batcher-entrypoint:/op-batcher-entrypoint
+    env_file:
+      - ../config/env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+

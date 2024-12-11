@@ -1,0 +1,71 @@
+services:
+  da-server:
+    image:  ghcr.io/otternode-io/ott-op-stack-1100:arm64
+    command: >
+      /app/da-server
+      --s3.bucket=otter-da
+      --s3.endpoint=da1.otterrpc.com
+      --s3.access-key-id=xxx
+      --s3.access-key-secret=xxx
+      --addr=0.0.0.0
+      --port=3100
+      --log.level=debug
+      --generic-commitment="false"
+#    volumes:
+#      - "./da_data:/data"
+
+  op-reth: 
+    image:  ghcr.io/otternode-io/ott-op-stack-1100
+    user: root
+    ports:
+      - 8545:8545       # RPC
+    entrypoint: /op-reth-entrypoint
+    volumes:
+        - ./data/op-reth:/datadir
+        - ../config:/config
+        - ./op-reth-entrypoint:/op-reth-entrypoint
+    env_file:
+      - ../config/env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
+  op-node: 
+    image:  ghcr.io/otternode-io/ott-op-stack-1100
+    user: root
+    depends_on:
+      - op-reth
+    entrypoint: /op-node-entrypoint
+    ports:
+      - 9223:9223     # P2P TCP
+      - 9223:9223/udp # P2P UDP
+    volumes:
+        - ../config:/config
+        - ./op-node-entrypoint:/op-node-entrypoint
+        - ./data:/data
+        - ./data/op_log:/op_log
+    env_file:
+      - ../config/env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
+  op-proposer:
+    image:  ghcr.io/otternode-io/ott-op-stack-1100
+    user: root
+    entrypoint: /op-proposer-entrypoint
+    restart: always
+    volumes:
+        - ../config:/config
+        - ./op-proposer-entrypoint:/op-proposer-entrypoint
+    env_file:
+      - ../config/env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
