@@ -1,6 +1,6 @@
 services:
   da-server:
-    image:  ghcr.io/otternode-io/ott-op-stack-1100:arm64
+    image:  ghcr.io/otternode-io/ott-op-stack-193
     command: >
       /app/da-server
       --s3.bucket=otter-da
@@ -15,7 +15,7 @@ services:
 #      - "./da_data:/data"
 
   op-reth: 
-    image:  ghcr.io/otternode-io/ott-op-stack-1100
+    image:  ghcr.io/otternode-io/ott-op-stack-193
     user: root
     ports:
       - 8545:8545       # RPC
@@ -33,7 +33,7 @@ services:
         max-file: "10"
 
   op-node: 
-    image:  ghcr.io/otternode-io/ott-op-stack-1100
+    image:  ghcr.io/otternode-io/ott-op-stack-193
     user: root
     depends_on:
       - op-reth
@@ -55,7 +55,7 @@ services:
         max-file: "10"
 
   op-proposer:
-    image:  ghcr.io/otternode-io/ott-op-stack-1100
+    image:  ghcr.io/otternode-io/ott-op-stack-193
     user: root
     entrypoint: /op-proposer-entrypoint
     restart: always
