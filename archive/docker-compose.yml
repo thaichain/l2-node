@@ -1,6 +1,7 @@
 services:
   da-server:
     image:  ghcr.io/otternode-io/ott-op-stack-193
+    restart: always
     command: >
       /app/da-server
       --s3.bucket=otter-da
@@ -19,13 +20,14 @@ services:
     user: root
     ports:
       - 8545:8545       # RPC
+    restart: always
     entrypoint: /op-reth-entrypoint
     volumes:
         - ./data/op-reth:/datadir
         - ../config:/config
         - ./op-reth-entrypoint:/op-reth-entrypoint
     env_file:
-      - ../config/env
+      - ../config/.env
     logging:
       driver: "json-file"
       options:
@@ -37,6 +39,7 @@ services:
     user: root
     depends_on:
       - op-reth
+    restart: always
     entrypoint: /op-node-entrypoint
     ports:
       - 9223:9223     # P2P TCP
@@ -47,7 +50,7 @@ services:
         - ./data:/data
         - ./data/op_log:/op_log
     env_file:
-      - ../config/env
+      - ../config/.env
     logging:
       driver: "json-file"
       options:
@@ -63,7 +66,7 @@ services:
         - ../config:/config
         - ./op-proposer-entrypoint:/op-proposer-entrypoint
     env_file:
-      - ../config/env
+      - ../config/.env
     logging:
       driver: "json-file"
       options:
